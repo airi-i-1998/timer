@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 
-//現在の日時を処理
+//現在の日時を取得
 const date = ref(new Date());
+// データの変更に伴って自動的に再計算される
 const year = computed(() => date.value.getFullYear());
 const month = computed(() => date.value.getMonth() + 1);
 const day = computed(() => dateTimePadding(date.value.getDate()));
@@ -31,6 +32,15 @@ onMounted(() => {
     date.value = new Date();
   }, 1000);
 });
+
+// デフォルトを10秒で設定
+const selectedTime = ref(10000);
+
+function setAlarm() {
+  window.setTimeout(() => {
+    alert(`${selectedTime.value / 1000}秒経過しました！`);
+  }, selectedTime.value);
+}
 </script>
 
 <template>
@@ -43,6 +53,20 @@ onMounted(() => {
         {{ hours }}：{{ minutes }}
         <span class="seconds">：{{ seconds }}</span>
       </p>
+    </div>
+    <div class="timer">
+    <p class="set">
+      <select v-model="selectedTime" class="set-time">
+        <option value="10000">10秒</option>
+        <option value="30000">30秒</option>
+        <option value="60000">1分</option>
+        <option value="300000">5分</option>
+        <option value="600000">10分</option>
+        <option value="1800000">30分</option>
+        </select>
+        後にアラーム
+      </p>
+      <span class="button" @click="setAlarm()">設定</span>
     </div>
   </div>
 </template>
@@ -69,6 +93,7 @@ p {
 .time {
   font-weight: 700;
   color: lawngreen;
+  font-size: 80px;
 }
 
 .date {
@@ -77,11 +102,45 @@ p {
   padding-left: 40%;
 }
 
-.time {
-  font-size: 80px;
-}
-
 .seconds {
   font-size: 40px;
+}
+
+.timer{
+  display: flex;
+}
+
+.set {
+  color: beige;
+  margin: 5px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.set-time {
+  font-size: 20px;
+  font-weight: 500;
+  margin-right: 5px;
+  border-radius: 8px;
+  padding: 5px;
+}
+
+.button {
+  border: 2px solid lawngreen;
+  background-color: lawngreen;
+  text-align: center;
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.button:hover {
+  background-color: limegreen;
+  border: 2px solid limegreen;
 }
 </style>
